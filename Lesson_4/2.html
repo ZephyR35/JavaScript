@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Homework</title>
+</head>
+<body>
+<!--
+Необязательное задание, но желательно сделать.
+
+Необходимо данное задание выполнить в es5 стиле и в es6 стиле.
+Необходимо создать функцию-конструктор/класс для поста в социальной сети.
+Названия: `PostES5` для es5 стиля и `PostES6` для es6 стиля.
+Пост должен хранить:
+1. Автора поста (имени достаточно).
+2. Текст поста.
+3. Дату и время последнего изменения поста.
+Данные автора поста и текст поста необходимо передавать при создании
+экземпляра объекта.
+Каждому экземпляру объекта должен быть доступен метод `edit`, который будет
+менять текст поста.
+
+---
+
+Необходимо создать функцию-конструктор/класс для закрепленного поста в
+социальной сети.
+Названия: `AttachedPostES5` для es5 стиля и `AttachedPostES6` для es6 стиля.
+Закрепленный пост должен наследоваться от обычного поста.
+Данные автора поста и текст поста необходимо передавать при создании
+экземпляра объекта.
+Закрепленный пост должен иметь свойство `highlighted`, в котором по умолчанию
+будет лежать значение false (это свойство будет обозначать, будет ли наш
+закрепленный пост подсвечен).
+У экземпляров объекта закрепленного поста должен быть метод с названием
+`makeTextHighlighted`, который сделает так, чтобы наш пост стал подсвеченным
+(будет менять свойство `highlighted`).
+
+---
+
+Подсказки:
+1. Задание сложное, советую делать по аналогии с примером на онлайн-занятии.
+2. Обратите внимание что пост хранит "дату и время последнего изменения
+поста", это значит что если пост кто-то изменит (например вызовет какой-то
+метод, который изменит что-то в посте), дата и время последнего изменения
+поста также должна измениться.
+3. Выполняйте все по порядку, не стоит пытаться сделать все сразу, иначе можно
+что-нибудь пропустить.
+4. Если непонятно условие - задайте вопрос.
+-->
+<script>
+  "use strict";
+  function PostES5 (author,text) {
+    this.author = author;
+    this.text = text;
+    this.date = new Date();
+  };
+
+  PostES5.prototype.showInfo = function(){
+    console.log(`Автор поста - ${this.author}, Текст поста - ${this.text}, 
+    Дата и время создания поста - ${this.date}`)
+  };
+
+  PostES5.prototype.edit = function(newText){
+    this.text = newText;
+    this.date = new Date();
+    console.log('Текст поста изменен!');
+  };
+
+  let post1 = new PostES5('Никита','Привет');
+  post1.showInfo();
+  post1.edit('Еще раз привет!');
+  post1.showInfo();
+  
+  // -------------------
+
+  class PostES6{
+    constructor(author,text){
+      this.author = author;
+      this.text = text;
+      this.date = new Date();
+    }
+    showInfo(){
+      console.log(`Автор поста - ${this.author}, Текст поста - ${this.text}, 
+    Дата и время создания поста - ${this.date}`)
+    }
+    edit(newText){
+      this.text = newText;
+      this.date = new Date();
+      console.log('Текст поста изменен!');
+    }
+  };
+
+  let post2 = new PostES6('Алена','Здравствуйте');
+  post2.showInfo();
+  post2.edit('И снова Здравствуйте');
+  post2.showInfo();
+
+  // -------------------
+
+  function AttachedPostES5(author,text){
+    PostES5.call(this, author, text);
+    this.highLigthed = false
+  };
+
+  AttachedPostES5.prototype = Object.create(PostES5.prototype);
+  AttachedPostES5.prototype.constructor = AttachedPostES5;
+
+
+  /*
+  Здесь я понимаю что у прототипа уже есть метод showInfo, но я не понял как
+  его правильно переопределить,поэтому просто создал еще один метод у
+  наследника.
+  */
+  AttachedPostES5.prototype.showInfo = function(){
+    console.log(`Автор поста - ${this.author}, Текст поста - ${this.text}, 
+    Дата и время создания поста - ${this.date}`)
+    if (this.highLigthed === false){
+      console.log('Текст не подсвечен!');
+    } else {
+      console.log('Текст подсвечен!');
+    }
+  };
+
+  AttachedPostES5.prototype.makeTextHighlighted = function(){
+    this.highLigthed = true;
+    console.log('Теперь текст подсвечен!');
+  };
+
+  let attachedpost1 = new AttachedPostES5('Павел','Привет мир!');
+  attachedpost1.showInfo();
+  attachedpost1.edit('И снова Привет мир!');
+  attachedpost1.showInfo();
+  attachedpost1.makeTextHighlighted();
+  attachedpost1.showInfo();
+
+  //----------------
+
+  class AttachedPostES6 extends PostES6{
+    constructor(author,text){
+      super(author,text);
+      this.highLigthed = false
+    }
+    showInfo(){
+      super.showInfo();
+      if (this.highLigthed === false){
+      console.log('Текст не подсвечен!');
+    } else {
+      console.log('Текст подсвечен!');
+    }
+    }
+    makeTextHighlighted(){
+      this.highLigthed = true;
+      console.log('Теперь текст подсвечен!');
+    };
+  };
+
+  let attachedpost2 = new AttachedPostES6('Иван','Новый пост!');
+  attachedpost2.showInfo();
+  attachedpost2.edit('Еще один новый пост!');
+  attachedpost2.showInfo();
+  attachedpost2.makeTextHighlighted();
+  attachedpost2.showInfo();
+</script>
+</body>
+</html>
